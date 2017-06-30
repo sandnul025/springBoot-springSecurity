@@ -1,0 +1,27 @@
+# server
+server:
+  port: 8888
+spring:
+# dataSource
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/nul_blog?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: admin
+    password: root
+# jpa
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database: mysql
+# thymeleaf
+  thymeleaf:
+    prefix: classpath:/templates/
+    cache: false
+    suffix: .html
+# mybatis
+mybatis:
+  mapper-locations: mappers/*.xml
+
+
+

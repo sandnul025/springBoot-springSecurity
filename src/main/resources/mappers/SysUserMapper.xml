@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sandnul.repository.SysUserMapper">
+    <select id="findUserByUsername" resultType="com.sandnul.domain.SysUser">
+        select id,password,username from SYS_user WHERE username = #{username}
+    </select>
+
+    <select id="findPermissionsByUsername" resultType="com.sandnul.domain.SysPermission">
+        select sp.*
+        from sys_user su
+        left join sys_user_role  sur on su.id = sur.sys_user_id
+        left join sys_role_permission srp on sur.sys_role_id = srp.sys_role_id
+        left join sys_permission sp on srp.sys_permission_id = sp.id
+        where su.username = #{username}
+    </select>
+    
+    <select id="findRolesByUsername" resultType="com.sandnul.domain.SysRole">
+        select sr.*
+        from sys_user su
+        left join sys_user_role  sur on su.id = sur.sys_user_id
+        left join sys_role sr on sur.sys_role_id = sr.id
+        where su.username = #{username}
+    </select>
+    
+    <select id="findAllRolePermissoin" resultType="com.sandnul.domain.SysRolePermisson">
+        select sr.id roleId ,sr.name roleName,sp.id permissionId,sp.url
+        from sys_role_permission srp
+        left join sys_role sr  on sr.id = srp.sys_role_id
+        left join sys_permission sp on srp.sys_permission_id = sp.id
+    </select>
+</mapper>
