@@ -1,0 +1,12 @@
+springBoot+springsecurity 用户、角色、权限的框架
+主要用到的是：
+spring Boot、security、jpa、mybatis
+整合主要是对security的四个类/做了重写和实现
+
+FilterSecurityInterceptor 拦截器
+UserDetailsService （储存用户所有角色）
+InvocationSecurityMetadataSourceService（访问资源所需要的角色集合）
+AccessDecisionManager（判断用户请求的资源  是否能通过）
+
+都在文件夹security中
+其次有个WebSecurityConfig 配置文件主要是替换userdetailsservice来达到自定义登录验证
