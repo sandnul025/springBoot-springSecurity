@@ -1,8 +1,10 @@
 在没有用权限框架之前，我们做权限控制的时候一般思路是这样的：
+
 1.登录的时候从数据库中检索user所拥有的privileges存在内存中
 2.在用户发出请求的时候，将请求信息与用户所拥有的权限对比。
 
 spring security也有这种实现，然而我们要做的就是：
+
 自定义过滤器，代替原有的FilterSecurityInterceptor过滤器，实现
 UserDetailsService （储存用户所有角色）
 InvocationSecurityMetadataSourceService（访问资源所需要的角色集合）
@@ -11,6 +13,7 @@ AccessDecisionManager（判断用户请求的资源  是否能通过）
 ---
 思路很明了看看实现：
 说明：
+
 用了jpa 当时参考了一些资料，走了很多弯路发现没有很大作用，
 还是习惯自己写sql，所以这里只是用来创建表格，反正以后扩展crud会用到。
 真正做持久化的是mybatis，这两个整合在一起了，只是多创建了一个接口而已。
@@ -148,6 +151,7 @@ public class SysRolePermisson {
 ```
 
 ![image.png](http://upload-images.jianshu.io/upload_images/6334710-659ef911706420a7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 关于数据的设计我是这样想的：
 
 基础用户和高级用户区别是拥有多的权限
@@ -230,6 +234,7 @@ public interface SysUserRepository extends JpaRepository<SysUser, Long>{
 以下就是思路的实现
 ---
 二、替换原先的拦截器
+
 说实话我不知道这个拦截器和原先的拦截器有什么不同，我去掉后发现权限乱了
 ，估计还要读一些源码吧。
 ```
@@ -286,7 +291,11 @@ public class MyFilterSecurityInterceptor extends AbstractSecurityInterceptor imp
 ```
 ---
 三、重写UserDetailsService,登录认证
-认证是由 AuthenticationManager 来管理的，但是真正进行认证的是 AuthenticationManager 中定义的 AuthenticationProvider。Spring Security 默认会使用DaoAuthenticationProvider。DaoAuthenticationProvider 在进行认证的时候需要一个 UserDetailsService 来获取用户的信息 UserDetails。改变认证的方式，就实现 UserDetailsService，返回我们自己userdetails。
+
+认证是由 AuthenticationManager 来管理的，但是真正进行认证的是 AuthenticationManager 中定义的 AuthenticationProvider。
+Spring Security 默认会使用DaoAuthenticationProvider。
+DaoAuthenticationProvider 在进行认证的时候需要一个 UserDetailsService 来获取用户的信息 UserDetails。
+改变认证的方式，就实现 UserDetailsService，返回我们自己userdetails。
 ```
 @Component
 public class MyCustomUserService implements UserDetailsService{
@@ -321,6 +330,7 @@ public class MyCustomUserService implements UserDetailsService{
 ```
 ---
 四、实现FilterInvocationSecurityMetadataSource
+
 作用为了将所有资源和资源对应需要的角色存在map中
 用户请求资源的时候能够返回资源所对应的角色集合给
 决策器（MyAccessDecisionManager）
@@ -458,6 +468,7 @@ public class MyInvocationSecurityMetadataSourceService  implements
 ```
 ---
 四、决策器
+
 主要的方法返回值是void，可以想到既然判断是否有权通过，
 那没通过肯定就是抛出异常，让外层捕捉。
 ```
@@ -679,6 +690,7 @@ ls的账号去登录成功会跳转到hello页面然而，请求admin页面 则�
 
 ---
 以下是参考的一些文章
+
 http://blog.csdn.net/u012373815/article/details/54633046
 http://blog.csdn.net/code__code/article/details/53885510
 http://blog.csdn.net/u012367513/article/details/38866465
